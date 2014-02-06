@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Cadastro_Aluno</title>
+    </h:head>
+    <h:body onload="document.getElementById('form1:matricula').focus()">
+
+        <center for="nome" style="color:cornflowerblue">
+            <h1>
+                INTECH
+            </h1>
+        </center>
+
+        <h:form>
+            <p:menubar>
+                <p:menuitem value="Início" url="administrador.xhtml" icon="ui-icon-home"/>  
+
+                <p:submenu label="Cliente">  
+                    <p:menuitem value="Cadastrar" url="cadastrarCliente.xhtml" /> 
+                    <p:menuitem value="Alterar" url="#" />  
+                    <p:menuitem value="Remover" url="#" />
+
+                </p:submenu>  
+
+               <p:menuitem value="Sair" icon="ui-icon-close" action="#"/> 
+
+           </p:menubar>
+
+        </h:form>
+
+        <br/>
+
+        <p:layoutUnit position="center" size="100" resizable="true" closable="true" collapsible="true">
+
+            <center>
+                <br/>
+                <h:outputText style="color:red" value="#{alunoMB.mensagem}"/>
+            </center>
+            
+            
+             <!--Formulario de crud-->
+
+        <p:panel header="Manutenção de Clientes">
+            <h:form id="formulario" prependId="false">
+                <h:inputHidden value="#{clienteMB.cliente.codigo}"/>
+                <h:panelGrid columns="3">
+                    <h:outputText value="Nome:"/>
+                    <p:inputText id="campoNome" value="#{clienteMB.cliente.nome}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="O nome não pode conter números">
+                                 <f:validateRegex pattern="^[A-Za-z]+"/>
+                    </p:inputText>
+                    <p:message for="campoNome"/>
+                   
+                    <h:outputText value="Cpf ou Cnpj:"/>
+                    <p:inputMask id="campoCpfCnpj" mask="999.999.999-99" value="#{clienteMB.cliente.cpfoucnpj}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="Digite o cpf no formato XXX.XXX.XXX-XX"/>
+                    
+                    <p:message for="campoCpfCnpj"/>
+                    
+                    
+                    <h:outputText value="Senha:"/>
+                    <p:password id="campoSenha" value="#{clienteMB.cliente.senha}" 
+                                 required="true" requiredMessage="Campo obrigatório"/>
+                    <p:message for="campoSenha"/>
+
+                    <h:outputText value="E-mail:"/>
+                    <p:inputText id="campoEmail" value="#{clienteMB.cliente.email}"
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage=" Formato de de E-mail: nome@nome.com">
+                                 <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                   </p:inputText>
+                     <p:message for="campoEmail"/>
+                    
+                   
+
+
+                    <h:outputText value="Celular:"/>
+                    <p:inputMask id="campoCelular" mask="(99) 9999-9999"
+                                 value="#{clienteMB.cliente.celular}"
+                                 required="true" requiredMessage="Campo obrigatório"
+                                 validatorMessage="Digite o número do celular no formato (XX) XXXX-XXXX"/>
+                    <p:message for="campoCelular"/>
+
+                    
+
+                     <h:outputText value="Estado: " />  
+                     <p:selectOneMenu id="campoEstado" value="#{clienteMB.cliente.estado}" 
+                                     required="true" requiredMessage="Campo Obrigatório">  
+                        <f:selectItem itemLabel="Selecione o estado" itemValue="" />  
+                        <f:selectItem itemLabel="AC" itemValue="AC" />  
+                        <f:selectItem itemLabel="AL" itemValue="AL" />  
+                        <f:selectItem itemLabel="AP" itemValue="AP" /> 
+                        <f:selectItem itemLabel="AM" itemValue="AM" />
+                        <f:selectItem itemLabel="BA" itemValue="BA" />
+                        <f:selectItem itemLabel="CE" itemValue="CE" />
+                        <f:selectItem itemLabel="DF" itemValue="DF" />
+                        <f:selectItem itemLabel="ES" itemValue="ES" />
+                        <f:selectItem itemLabel="GO" itemValue="GO" />
+                        <f:selectItem itemLabel="MA" itemValue="MA" />
+                        <f:selectItem itemLabel="MT" itemValue="MT" />
+                        <f:selectItem itemLabel="MS" itemValue="MS" />
+                        <f:selectItem itemLabel="MG" itemValue="MG" />
+                        <f:selectItem itemLabel="PA" itemValue="PA" />
+                        <f:selectItem itemLabel="PB" itemValue="PB" />
+                        <f:selectItem itemLabel="PR" itemValue="PR" />
+                        <f:selectItem itemLabel="PE" itemValue="PE" />
+                        <f:selectItem itemLabel="PI" itemValue="PI" />
+                        <f:selectItem itemLabel="RJ" itemValue="RJ" />
+                        <f:selectItem itemLabel="RN" itemValue="RN" />
+                        <f:selectItem itemLabel="RS" itemValue="RS" />
+                        <f:selectItem itemLabel="RO" itemValue="RO" />
+                        <f:selectItem itemLabel="RR" itemValue="RR" />
+                        <f:selectItem itemLabel="SC" itemValue="SC" />
+                        <f:selectItem itemLabel="SP" itemValue="SP" />
+                        <f:selectItem itemLabel="SE" itemValue="SE" />
+                        <f:selectItem itemLabel="TO" itemValue="TO" />
+
+                    </p:selectOneMenu>
+                    <p:message for="campoEstado"/>
+                    
+                    <h:outputText value="Cidade:"/>
+                    <p:inputText id="campoCidade" value="#{clienteMB.cliente.cidade}"
+                                 required="true" requiredMessage="Campo obrigatório"/>
+                    <p:message for="campoCidade"/>
+                    
+
+                    <h:outputText value="Rua:"/>
+                    <p:inputText id="campoRua" value="#{clienteMB.cliente.rua}"
+                                 required="true" requiredMessage="Campo obrigatório"/>
+                    <p:message for="campoRua"/>
+
+                    
+
+                    <h:outputText value="Bairro:"/>
+                    <p:inputText id="campoBairro" value="#{clienteMB.cliente.bairro}"
+                                 required="true" requiredMessage="Campo obrigatório"/>
+                    <p:message for="campoBairro"/>
+                    
+
+                    <h:outputText value="PontoReferencia:"/>
+                    <p:inputText id="campoPontoReferencia" value="#{clienteMB.cliente.pontodereferencia}"
+                                 required="true" requiredMessage="Campo obrigatório"/>
+                    <p:message for="campoPontoReferencia"/>
+                    
+                    <h:outputText value="Número:"/>
+                    <p:inputText id="campoNumero" value="#{clienteMB.cliente.numero}"
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage=" Digite apenas números. Caso não tenha digite 0">
+                        <f:validateRegex pattern="[0-9]+"/>
+                    </p:inputText>
+                    <p:message for="campoNumero"/>
+                    
+
+                </h:panelGrid>
+                
+                <p:commandButton value="Cadastrar" action="#{clienteMB.cadastraCliente()}" image="ui-icon-disk" ajax="false"/>
+                <p:commandButton value="Alterar" action="#{clienteMB.alterarCliente()}" image="ui-icon-pencil" ajax="false"/>
+            </h:form>
+            
+        </p:panel>
+            
+           
+
+        </p:layoutUnit>
+
+    </h:body>
+</html>
+

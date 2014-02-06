@@ -23,7 +23,7 @@ public class Main {
         cliente2.setCpfoucnpj("1111111111111111");
         cliente2.setEstado("RN");
         cliente2.setPontodereferencia("algum");
-        cliente2.setNumero(1);
+        cliente2.setNumero("1");
         cliente2.setCidade("caico");
         cliente2.setRua("rua qualquer");
         cliente2.setSenha("fkjhsdklf");

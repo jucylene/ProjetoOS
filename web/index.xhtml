@@ -1,12 +1,115 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:head>
-        <title>Facelet Title</title>
-    </h:head>
-    <h:body>
-        Hello from Facelets
-    </h:body>
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <f:view contentType="text/html">
+
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Intech</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true" style="color: aqua">
+                    <center for="nome" style="color:cornflowerblue"> 
+                        <h1> 
+                            Intech
+                        </h1>   
+                    </center>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" resizable="true" visible="true">
+
+                    <form method="post"> 
+
+                        <center>
+
+                            <p:accordionPanel value="LOGIN">  
+                                <p:tab title="LOGIN DO ADMINISTRADOR">  
+
+                                    <h:form id="formEntrarAdm">
+
+                                        <br/>
+                                        <h:messages style="color:red" />
+                                        <h:outputText value="Matrícula : "/>
+                                        <p:inputMask  value="#" required="true" requiredMessage="Campo obrigatório" maxlength="10" mask="9999999999" >
+                                        </p:inputMask>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText value="Senha : "/><p:spacer height="20"/>
+                                        <p:password value="#" required="true" requiredMessage="Campo obrigatório" maxlength="30"/>
+                                        <div/>
+                                        <p:spacer height="70"/>
+                                        <h:commandButton value="Entrar" action="#}"/>
+
+                                    </h:form>
+
+                                </p:tab>  
+
+                                <p:tab title="LOGIN DO CLIENTE"> 
+
+                                    <h:form id="formEntrarAlu" >
+
+                                        <br/>
+                                        <h:messages style="color:red"/>
+                                        <h:outputText value="Matrícula : "/>
+                                        <p:inputMask value="#" required="true" requiredMessage="Campo obrigatório" maxlength="10" mask="9999999999" >
+                                        </p:inputMask>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText value="Senha : "/><p:spacer height="20"/>
+                                        <p:password  value="#" required="true" requiredMessage="Campo obrigatório" maxlength="30"/>
+                                        <div/>
+                                        <p:spacer height="70"/>
+                                        <h:commandButton value="Entrar" action="#"/>
+
+                                    </h:form>
+                                </p:tab>  
+
+                                <p:tab title="LOGIN DO FUNCIONARIO"> 
+                                    <h:form id="formEntrarCor">
+
+                                        <br/>
+                                        <h:messages style="color:red"/>
+                                        <h:outputText value="Matrícula : "/>
+                                        <p:inputMask  value="#" required="true" requiredMessage="Campo obrigatório" maxlength="10" mask="9999999999" >
+                                        </p:inputMask>
+                                        <br/>
+                                        <br/>
+                                        <h:outputText value="Senha : "/><p:spacer height="20"/>
+                                        <p:password  value="#" required="true" requiredMessage="Campo obrigatório" maxlength="30"/>
+                                        <div/>
+                                        <p:spacer height="70"/>
+                                        <h:commandButton value="Entrar" action="#" />
+
+                                    </h:form>
+
+                                </p:tab>  
+
+                            </p:accordionPanel> 
+
+                        </center>
+
+                    </form>
+
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="50" closable="true" collapsible="true">
+                   
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
 </html>
 

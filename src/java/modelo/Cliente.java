@@ -81,7 +81,7 @@ public class Cliente implements Serializable {
     private String pontodereferencia;
     @Basic(optional = false)
     @Column(name = "numero")
-    private int numero;
+    private String numero;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "codigocliente")
     private Collection<Os> osCollection;
 
@@ -92,7 +92,7 @@ public class Cliente implements Serializable {
         this.codigo = codigo;
     }
 
-    public Cliente(Integer codigo, String cpfoucnpj, String nome, String senha, String email, String celular, String estado, String cidade, String rua, String bairro, int numero) {
+    public Cliente(Integer codigo, String cpfoucnpj, String nome, String senha, String email, String celular, String estado, String cidade, String rua, String bairro, String numero) {
         this.codigo = codigo;
         this.cpfoucnpj = cpfoucnpj;
         this.nome = nome;
@@ -194,11 +194,11 @@ public class Cliente implements Serializable {
         this.pontodereferencia = pontodereferencia;
     }
 
-    public int getNumero() {
+    public String getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(String numero) {
         this.numero = numero;
     }
 

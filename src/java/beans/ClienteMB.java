@@ -27,6 +27,7 @@ public class ClienteMB {
     private ClienteJpaController clienteDao = new ClienteJpaController(EMF.getEntityManagerFactory());
 
     public ClienteMB() {
+        
     }
 
     public void cadastraCliente() {
