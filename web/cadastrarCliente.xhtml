@@ -52,6 +52,7 @@
                     <p:inputText id="campoNome" value="#{clienteMB.cliente.nome}" 
                                  required="true" requiredMessage="Campo obrigatório" validatorMessage="O nome não pode conter números">
                                  <f:validateRegex pattern="^[A-Za-z]+"/>
+                                 
                     </p:inputText>
                     <p:message for="campoNome"/>
                    
@@ -74,8 +75,6 @@
                    </p:inputText>
                      <p:message for="campoEmail"/>
                     
-                   
-
 
                     <h:outputText value="Celular:"/>
                     <p:inputMask id="campoCelular" mask="(99) 9999-9999"
@@ -83,8 +82,6 @@
                                  required="true" requiredMessage="Campo obrigatório"
                                  validatorMessage="Digite o número do celular no formato (XX) XXXX-XXXX"/>
                     <p:message for="campoCelular"/>
-
-                    
 
                      <h:outputText value="Estado: " />  
                      <p:selectOneMenu id="campoEstado" value="#{clienteMB.cliente.estado}" 
