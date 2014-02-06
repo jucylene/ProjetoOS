@@ -1,9 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package modelo;
 
 import java.io.Serializable;
@@ -12,8 +10,6 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -31,8 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c"),
-    @NamedQuery(name = "Cliente.findByCodigo", query = "SELECT c FROM Cliente c WHERE c.codigo = :codigo"),
-    @NamedQuery(name = "Cliente.findByCpfoucnpj", query = "SELECT c FROM Cliente c WHERE c.cpfoucnpj = :cpfoucnpj"),
+    @NamedQuery(name = "Cliente.findByCnpj", query = "SELECT c FROM Cliente c WHERE c.cnpj = :cnpj"),
     @NamedQuery(name = "Cliente.findByNome", query = "SELECT c FROM Cliente c WHERE c.nome = :nome"),
     @NamedQuery(name = "Cliente.findBySenha", query = "SELECT c FROM Cliente c WHERE c.senha = :senha"),
     @NamedQuery(name = "Cliente.findByEmail", query = "SELECT c FROM Cliente c WHERE c.email = :email"),
@@ -46,13 +41,9 @@ import javax.xml.bind.annotation.XmlTransient;
 public class Cliente implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "codigo")
-    private Integer codigo;
-    @Basic(optional = false)
-    @Column(name = "cpfoucnpj")
-    private String cpfoucnpj;
+    @Column(name = "cnpj")
+    private String cnpj;
     @Basic(optional = false)
     @Column(name = "nome")
     private String nome;
@@ -88,13 +79,12 @@ public class Cliente implements Serializable {
     public Cliente() {
     }
 
-    public Cliente(Integer codigo) {
-        this.codigo = codigo;
+    public Cliente(String cnpj) {
+        this.cnpj = cnpj;
     }
 
-    public Cliente(Integer codigo, String cpfoucnpj, String nome, String senha, String email, String celular, String estado, String cidade, String rua, String bairro, String numero) {
-        this.codigo = codigo;
-        this.cpfoucnpj = cpfoucnpj;
+    public Cliente(String cnpj, String nome, String senha, String email, String celular, String estado, String cidade, String rua, String bairro, String numero) {
+        this.cnpj = cnpj;
         this.nome = nome;
         this.senha = senha;
         this.email = email;
@@ -106,20 +96,12 @@ public class Cliente implements Serializable {
         this.numero = numero;
     }
 
-    public Integer getCodigo() {
-        return codigo;
+    public String getCnpj() {
+        return cnpj;
     }
 
-    public void setCodigo(Integer codigo) {
-        this.codigo = codigo;
-    }
-
-    public String getCpfoucnpj() {
-        return cpfoucnpj;
-    }
-
-    public void setCpfoucnpj(String cpfoucnpj) {
-        this.cpfoucnpj = cpfoucnpj;
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     public String getNome() {
@@ -214,7 +196,7 @@ public class Cliente implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (codigo != null ? codigo.hashCode() : 0);
+        hash += (cnpj != null ? cnpj.hashCode() : 0);
         return hash;
     }
 
@@ -225,7 +207,7 @@ public class Cliente implements Serializable {
             return false;
         }
         Cliente other = (Cliente) object;
-        if ((this.codigo == null && other.codigo != null) || (this.codigo != null && !this.codigo.equals(other.codigo))) {
+        if ((this.cnpj == null && other.cnpj != null) || (this.cnpj != null && !this.cnpj.equals(other.cnpj))) {
             return false;
         }
         return true;
@@ -233,7 +215,7 @@ public class Cliente implements Serializable {
 
     @Override
     public String toString() {
-        return "modelo.Cliente[ codigo=" + codigo + " ]";
+        return "modelo.Cliente[ cnpj=" + cnpj + " ]";
     }
     
 }

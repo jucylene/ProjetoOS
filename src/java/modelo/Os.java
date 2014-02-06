@@ -1,9 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package modelo;
 
 import java.io.Serializable;
@@ -44,8 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Os.findByDescricao", query = "SELECT o FROM Os o WHERE o.descricao = :descricao"),
     @NamedQuery(name = "Os.findByObservacao", query = "SELECT o FROM Os o WHERE o.observacao = :observacao")})
 public class Os implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "protocoloOs")
-    private Collection<Item> itemCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,9 +68,11 @@ public class Os implements Serializable {
     @JoinColumn(name = "codigofunc", referencedColumnName = "codigo")
     @ManyToOne(optional = false)
     private Funcionario codigofunc;
-    @JoinColumn(name = "codigocliente", referencedColumnName = "codigo")
+    @JoinColumn(name = "codigocliente", referencedColumnName = "cnpj")
     @ManyToOne(optional = false)
     private Cliente codigocliente;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "protocoloOs")
+    private Collection<Item> itemCollection;
 
     public Os() {
     }
@@ -162,6 +160,15 @@ public class Os implements Serializable {
         this.codigocliente = codigocliente;
     }
 
+    @XmlTransient
+    public Collection<Item> getItemCollection() {
+        return itemCollection;
+    }
+
+    public void setItemCollection(Collection<Item> itemCollection) {
+        this.itemCollection = itemCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -185,15 +192,6 @@ public class Os implements Serializable {
     @Override
     public String toString() {
         return "modelo.Os[ protocolo=" + protocolo + " ]";
-    }
-
-    @XmlTransient
-    public Collection<Item> getItemCollection() {
-        return itemCollection;
-    }
-
-    public void setItemCollection(Collection<Item> itemCollection) {
-        this.itemCollection = itemCollection;
     }
     
 }

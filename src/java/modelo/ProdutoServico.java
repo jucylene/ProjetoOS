@@ -1,9 +1,7 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package modelo;
 
 import java.io.Serializable;
@@ -36,8 +34,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ProdutoServico.findByPreco", query = "SELECT p FROM ProdutoServico p WHERE p.preco = :preco"),
     @NamedQuery(name = "ProdutoServico.findByQuantidade", query = "SELECT p FROM ProdutoServico p WHERE p.quantidade = :quantidade")})
 public class ProdutoServico implements Serializable {
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codigoProdutoServico")
-    private Collection<Item> itemCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -56,6 +52,8 @@ public class ProdutoServico implements Serializable {
     @Basic(optional = false)
     @Column(name = "quantidade")
     private int quantidade;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "codigoProdutoServico")
+    private Collection<Item> itemCollection;
 
     public ProdutoServico() {
     }
@@ -112,6 +110,15 @@ public class ProdutoServico implements Serializable {
         this.quantidade = quantidade;
     }
 
+    @XmlTransient
+    public Collection<Item> getItemCollection() {
+        return itemCollection;
+    }
+
+    public void setItemCollection(Collection<Item> itemCollection) {
+        this.itemCollection = itemCollection;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -135,15 +142,6 @@ public class ProdutoServico implements Serializable {
     @Override
     public String toString() {
         return "modelo.ProdutoServico[ codigo=" + codigo + " ]";
-    }
-
-    @XmlTransient
-    public Collection<Item> getItemCollection() {
-        return itemCollection;
-    }
-
-    public void setItemCollection(Collection<Item> itemCollection) {
-        this.itemCollection = itemCollection;
     }
     
 }

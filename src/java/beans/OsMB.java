@@ -48,7 +48,7 @@ public class OsMB {
         osDao.findOsEntities();
     }
 
-    public void excluirOs(Integer codigo) {
+    public void excluirOs(Integer codigo) throws IllegalOrphanException {
         try {
             osDao.destroy(codigo);
         } catch (NonexistentEntityException ex) {

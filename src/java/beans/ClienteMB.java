@@ -8,6 +8,7 @@ package beans;
 import dao.ClienteJpaController;
 import dao.exceptions.IllegalOrphanException;
 import dao.exceptions.NonexistentEntityException;
+import dao.exceptions.PreexistingEntityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -30,8 +31,8 @@ public class ClienteMB {
         
     }
 
-    public void cadastraCliente() {
-        clienteDao.create(getCliente());
+    public void cadastraCliente() throws PreexistingEntityException, Exception {
+        clienteDao.create(cliente);
     }
 
     public void alterarCliente() {
@@ -49,9 +50,9 @@ public class ClienteMB {
         clienteDao.findClienteEntities();
     }
 
-    public void excluirCliente(Integer codigo) {
+    public void excluirCliente(String cnpj) {
         try {
-            clienteDao.destroy(codigo);
+            clienteDao.destroy(cnpj);
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NonexistentEntityException ex) {

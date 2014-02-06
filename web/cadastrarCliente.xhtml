@@ -46,7 +46,6 @@
 
         <p:panel header="Manutenção de Clientes">
             <h:form id="formulario" prependId="false">
-                <h:inputHidden value="#{clienteMB.cliente.codigo}"/>
                 <h:panelGrid columns="3">
                     <h:outputText value="Nome:"/>
                     <p:inputText id="campoNome" value="#{clienteMB.cliente.nome}" 
@@ -56,11 +55,11 @@
                     </p:inputText>
                     <p:message for="campoNome"/>
                    
-                    <h:outputText value="Cpf ou Cnpj:"/>
-                    <p:inputMask id="campoCpfCnpj" mask="999.999.999-99" value="#{clienteMB.cliente.cpfoucnpj}" 
-                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="Digite o cpf no formato XXX.XXX.XXX-XX"/>
+                    <h:outputText value="CNPJ:"/>
+                    <p:inputMask id="campoCnpj" mask="99.999.999/9999-99" value="#{clienteMB.cliente.cnpj}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="Digite o cnpj no formato XX.XXX.XXX/XXXX-XX"/>
                     
-                    <p:message for="campoCpfCnpj"/>
+                    <p:message for="campoCnpj"/>
                     
                     
                     <h:outputText value="Senha:"/>
