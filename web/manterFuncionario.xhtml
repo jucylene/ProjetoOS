@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
-        <title>Cadastro_Aluno</title>
+        <title>Cadastro de Funcionario</title>
     </h:head>
     <h:body>
 
@@ -35,42 +35,46 @@
         <br/>
 
         <p:layoutUnit position="center" size="100" resizable="true" closable="true" collapsible="true">
-
-            <center>
-                <br/>
-                <h:outputText style="color:red" value="#{alunoMB.mensagem}"/>
-            </center>
             
             
              <!--Formulario de crud-->
 
-        <p:panel header="Manutenção de Clientes">
+        <p:panel header="Manutenção de Funcionário!">
             <h:form id="formulario" prependId="false">
                 <h:panelGrid columns="3">
                     <h:outputText value="Nome:"/>
-                    <p:inputText id="campoNome" value="#{clienteMB.cliente.nome}" 
+                    <p:inputText id="campoNome" value="#{funcionarioMB.funcionario.nome}" 
                                  required="true" requiredMessage="Campo obrigatório" validatorMessage="O nome não pode conter números">
                                  <f:validateRegex pattern="^[A-Za-z]+"/>
                                  
                     </p:inputText>
                     <p:message for="campoNome"/>
+                    
+                    <h:outputText value="Função:"/>
+                    <p:inputText id="campoFuncao" value="#{funcionarioMB.funcionario.funcao}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="A função não pode conter números">
+                                 <f:validateRegex pattern="^[A-Za-z]+"/>
+                                 
+                    </p:inputText>
+                    <p:message for="campoFuncao"/>
+                    
+                    
                    
-                    <h:outputText value="CNPJ:"/>
-                    <p:inputMask id="campoCnpj" mask="99.999.999/9999-99" value="#{clienteMB.cliente.cnpj}" 
-                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="Digite o cnpj no formato XX.XXX.XXX/XXXX-XX"/>
+                    <h:outputText value="CPF:"/>
+                    <p:inputMask id="campoCpf" mask="999.999.999-99" value="#{funcionarioMB.funcionario.cpf}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="Digite o CPF no formato XXX.XXX.XXX-XX"/>
                     
-                    <p:message for="campoCnpj"/>
-                    
+                    <p:message for="campoCpf"/>
                     
                     
                     
                     <h:outputText value="Senha:"/>
-                    <p:password id="campoSenha" value="#{clienteMB.cliente.senha}" 
+                    <p:password id="campoSenha" value="#{funcionarioMB.funcionario.senha}" 
                                  required="true" requiredMessage="Campo obrigatório"/>
                     <p:message for="campoSenha"/>
 
                     <h:outputText value="E-mail:"/>
-                    <p:inputText id="campoEmail" value="#{clienteMB.cliente.email}"
+                    <p:inputText id="campoEmail" value="#{funcionarioMB.funcionario.email}"
                                  required="true" requiredMessage="Campo obrigatório" validatorMessage=" Formato de de E-mail: nome@nome.com">
                                  <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                    </p:inputText>
@@ -79,55 +83,55 @@
 
                     <h:outputText value="Celular:"/>
                     <p:inputMask id="campoCelular" mask="(99) 9999-9999"
-                                 value="#{clienteMB.cliente.celular}"
+                                 value="#{funcionarioMB.funcionario.celular}"
                                  required="true" requiredMessage="Campo obrigatório"
                                  validatorMessage="Digite o número do celular no formato (XX) XXXX-XXXX"/>
                     <p:message for="campoCelular"/>
 
                      <h:outputText value="Estado: " /> 
                      
-                     <p:selectOneMenu id="campoEstado" value="#{clienteMB.estado.sigla}" 
+                     <p:selectOneMenu id="campoEstado" value="#{funcionarioMB.estSig}" 
                                      required="true" requiredMessage="Campo Obrigatório">  
                          <f:selectItem itemLabel="Selecione o Estado" itemValue="" />
                          
-                         <f:selectItems value="#{clienteMB.estados}" var="est" itemLabel="#{est.nome}" itemValue="#{est.sigla}"/> 
+                         <f:selectItems value="#{funcionarioMB.estados}" var="est" itemLabel="#{est.nome}" itemValue="#{est.sigla}"/> 
                          
                          
                          <p:ajax update="campoCidade"   
-                                 listener="#{clienteMB.cidades}" /> 
+                                 listener="#{funcionarioMB.cidades}" /> 
                          
                     </p:selectOneMenu>
                     <p:message for="campoEstado"/>
                      
                     <h:outputText value="Cidade: " />  
-                    <p:selectOneMenu id="campoCidade" value="#{clienteMB.cidade.codigo}" 
+                    <p:selectOneMenu id="campoCidade" value="#{funcionarioMB.codCidade}" 
                                      required="true" requiredMessage="Campo Obrigatório">  
                          <f:selectItem itemLabel="Selecione a cidade" itemValue="" /> 
-                         <f:selectItems value="#{clienteMB.cidades}" var="cid" itemLabel="#{cid.nome}" itemValue="#{cid.codigo}"/>                   
+                         <f:selectItems value="#{funcionarioMB.cidades}" var="cid" itemLabel="#{cid.nome}" itemValue="#{cid.codigo}"/>                   
                     </p:selectOneMenu>
                     <p:message for="campoCidade"/>
             
                     
                     <h:outputText value="Rua:"/>
-                    <p:inputText id="campoRua" value="#{clienteMB.endereco.rua}"
+                    <p:inputText id="campoRua" value="#{funcionarioMB.funcionario.codigoendereco.rua}"
                                  required="true" requiredMessage="Campo obrigatório"/>
                     <p:message for="campoRua"/>
 
                     
 
                     <h:outputText value="Bairro:"/>
-                    <p:inputText id="campoBairro" value="#{clienteMB.endereco.bairro}"
+                    <p:inputText id="campoBairro" value="#{funcionarioMB.funcionario.codigoendereco.bairro}"
                                  required="true" requiredMessage="Campo obrigatório"/>
                     <p:message for="campoBairro"/>
                     
 
                     <h:outputText value="PontoReferencia:"/>
-                    <p:inputText id="campoPontoReferencia" value="#{clienteMB.endereco.pontodereferencia}"
+                    <p:inputText id="campoPontoReferencia" value="#{funcionarioMB.funcionario.codigoendereco.pontodereferencia}"
                                  required="true" requiredMessage="Campo obrigatório"/>
                     <p:message for="campoPontoReferencia"/>
                     
                     <h:outputText value="Número:"/>
-                    <p:inputText id="campoNumero" value="#{clienteMB.endereco.numero}"
+                    <p:inputText id="campoNumero" value="#{funcionarioMB.funcionario.codigoendereco.numero}"
                                  required="true" requiredMessage="Campo obrigatório" validatorMessage=" Digite apenas números. Caso não tenha digite 0">
                         <f:validateRegex pattern="[0-9]+"/>
                     </p:inputText>
@@ -136,8 +140,8 @@
 
                 </h:panelGrid>
                 
-                <p:commandButton value="Cadastrar" action="#{clienteMB.cadastraCliente()}" image="ui-icon-disk" ajax="false"/>
-                <p:commandButton value="Alterar" action="#{clienteMB.alterarCliente()}" image="ui-icon-pencil" ajax="false"/>
+                <p:commandButton value="Cadastrar" action="#{funcionarioMB.cadastraFuncionario()}" image="ui-icon-disk" ajax="false"/>
+                <p:commandButton value="Alterar" action="#{funcionarioMB.alterarFuncionario()}" image="ui-icon-pencil" ajax="false"/>
             </h:form>
             
         </p:panel>

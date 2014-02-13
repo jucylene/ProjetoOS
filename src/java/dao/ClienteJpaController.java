@@ -12,6 +12,7 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import modelo.Endereco;
 import modelo.Os;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +44,11 @@ public class ClienteJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Endereco codigoendereco = cliente.getCodigoendereco();
+            if (codigoendereco != null) {
+                codigoendereco = em.getReference(codigoendereco.getClass(), codigoendereco.getCodigo());
+                cliente.setCodigoendereco(codigoendereco);
+            }
             Collection<Os> attachedOsCollection = new ArrayList<Os>();
             for (Os osCollectionOsToAttach : cliente.getOsCollection()) {
                 osCollectionOsToAttach = em.getReference(osCollectionOsToAttach.getClass(), osCollectionOsToAttach.getProtocolo());
@@ -50,6 +56,10 @@ public class ClienteJpaController implements Serializable {
             }
             cliente.setOsCollection(attachedOsCollection);
             em.persist(cliente);
+            if (codigoendereco != null) {
+                codigoendereco.getClienteCollection().add(cliente);
+                codigoendereco = em.merge(codigoendereco);
+            }
             for (Os osCollectionOs : cliente.getOsCollection()) {
                 Cliente oldCodigoclienteOfOsCollectionOs = osCollectionOs.getCodigocliente();
                 osCollectionOs.setCodigocliente(cliente);
@@ -78,6 +88,8 @@ public class ClienteJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Cliente persistentCliente = em.find(Cliente.class, cliente.getCnpj());
+            Endereco codigoenderecoOld = persistentCliente.getCodigoendereco();
+            Endereco codigoenderecoNew = cliente.getCodigoendereco();
             Collection<Os> osCollectionOld = persistentCliente.getOsCollection();
             Collection<Os> osCollectionNew = cliente.getOsCollection();
             List<String> illegalOrphanMessages = null;
@@ -92,6 +104,10 @@ public class ClienteJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (codigoenderecoNew != null) {
+                codigoenderecoNew = em.getReference(codigoenderecoNew.getClass(), codigoenderecoNew.getCodigo());
+                cliente.setCodigoendereco(codigoenderecoNew);
+            }
             Collection<Os> attachedOsCollectionNew = new ArrayList<Os>();
             for (Os osCollectionNewOsToAttach : osCollectionNew) {
                 osCollectionNewOsToAttach = em.getReference(osCollectionNewOsToAttach.getClass(), osCollectionNewOsToAttach.getProtocolo());
@@ -100,6 +116,14 @@ public class ClienteJpaController implements Serializable {
             osCollectionNew = attachedOsCollectionNew;
             cliente.setOsCollection(osCollectionNew);
             cliente = em.merge(cliente);
+            if (codigoenderecoOld != null && !codigoenderecoOld.equals(codigoenderecoNew)) {
+                codigoenderecoOld.getClienteCollection().remove(cliente);
+                codigoenderecoOld = em.merge(codigoenderecoOld);
+            }
+            if (codigoenderecoNew != null && !codigoenderecoNew.equals(codigoenderecoOld)) {
+                codigoenderecoNew.getClienteCollection().add(cliente);
+                codigoenderecoNew = em.merge(codigoenderecoNew);
+            }
             for (Os osCollectionNewOs : osCollectionNew) {
                 if (!osCollectionOld.contains(osCollectionNewOs)) {
                     Cliente oldCodigoclienteOfOsCollectionNewOs = osCollectionNewOs.getCodigocliente();
@@ -150,6 +174,11 @@ public class ClienteJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Endereco codigoendereco = cliente.getCodigoendereco();
+            if (codigoendereco != null) {
+                codigoendereco.getClienteCollection().remove(cliente);
+                codigoendereco = em.merge(codigoendereco);
             }
             em.remove(cliente);
             em.getTransaction().commit();

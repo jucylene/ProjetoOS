@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <head>
+        <title>TODO supply a title</title>
+    </head>
+    <body>
+        <h:form>
+            <h:commandButton  action="#{clienteMB.cidadePorEstado}" value="criar"/>
+            
+            <h:outputText value="Cidade: " />  
+                    <p:selectOneMenu id="campoCidade" 
+                                     required="true" requiredMessage="Campo Obrigatório">  
+                         <f:selectItem itemLabel="Selecione a cidade" itemValue="" /> 
+                         <f:selectItems value="#{clienteMB.cidadePorEstado}" var="cid" itemLabel="#{cid.nome}" itemValue="#{cid.codigo}"/>                   
+                    </p:selectOneMenu>
+                    <p:message for="campoCidade"/>
+                    
+            
+        </h:form>
+        
+        
+    </body>
+</html>

@@ -8,6 +8,8 @@ package beans;
 import dao.ProdutoServicoJpaController;
 import dao.exceptions.IllegalOrphanException;
 import dao.exceptions.NonexistentEntityException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
@@ -24,11 +26,34 @@ import util.EMF;
 public class ProdutoServicoMB {
 
     private ProdutoServico produtoServico = new ProdutoServico();
+    private List<ProdutoServico> produtoServicos = new ArrayList<ProdutoServico>();
+
+   
     private ProdutoServicoJpaController produtoServicoDao = new ProdutoServicoJpaController(EMF.getEntityManagerFactory());
 
     public ProdutoServicoMB() {
+        //setTipoDOServico(codigo);
     }
 
+    public List<ProdutoServico> getProdutoServicos() {
+        return produtoServicos = produtoServicoDao.findProdutoServicoEntities();
+    }
+
+    public void setProdutoServicos(List<ProdutoServico> produtoServicos) {
+        this.produtoServicos = produtoServicos;
+    }
+    
+    public void setTipoDOServico(int cod)
+    {
+        if(produtoServico.getCodigo().equals(1))
+            produtoServico.setTipo("Produto");
+        else if(produtoServico.getCodigo().equals(2))
+            produtoServico.setTipo("Servico");
+        else
+            produtoServico.setTipo(null);
+    }
+
+    
     public void cadastraProdutoServico() {
         try {
             produtoServicoDao.create(produtoServico);
@@ -49,15 +74,23 @@ public class ProdutoServicoMB {
     }
 
     public void pesquisarProdutoServico() {
-        produtoServicoDao.findProdutoServicoEntities();
+         produtoServicoDao.findProdutoServicoEntities();
     }
 
-    public void excluirProdutoServico(Integer codigo) {
+    public void excluirProdutoServico(Integer codigo) throws IllegalOrphanException {
         try {
             produtoServicoDao.destroy(codigo);
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+     public ProdutoServico getProdutoServico() {
+        return produtoServico;
+    }
+
+    public void setProdutoServico(ProdutoServico produtoServico) {
+        this.produtoServico = produtoServico;
     }
 
 }

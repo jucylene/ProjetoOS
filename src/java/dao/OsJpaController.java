@@ -4,21 +4,17 @@
  */
 package dao;
 
-import dao.exceptions.IllegalOrphanException;
 import dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import modelo.Funcionario;
 import modelo.Cliente;
-import modelo.Item;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import modelo.Os;
 
 /**
@@ -37,16 +33,13 @@ public class OsJpaController implements Serializable {
     }
 
     public void create(Os os) {
-        if (os.getItemCollection() == null) {
-            os.setItemCollection(new ArrayList<Item>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             Funcionario codigofunc = os.getCodigofunc();
             if (codigofunc != null) {
-                codigofunc = em.getReference(codigofunc.getClass(), codigofunc.getCodigo());
+                codigofunc = em.getReference(codigofunc.getClass(), codigofunc.getCpf());
                 os.setCodigofunc(codigofunc);
             }
             Cliente codigocliente = os.getCodigocliente();
@@ -54,12 +47,6 @@ public class OsJpaController implements Serializable {
                 codigocliente = em.getReference(codigocliente.getClass(), codigocliente.getCnpj());
                 os.setCodigocliente(codigocliente);
             }
-            Collection<Item> attachedItemCollection = new ArrayList<Item>();
-            for (Item itemCollectionItemToAttach : os.getItemCollection()) {
-                itemCollectionItemToAttach = em.getReference(itemCollectionItemToAttach.getClass(), itemCollectionItemToAttach.getCodigo());
-                attachedItemCollection.add(itemCollectionItemToAttach);
-            }
-            os.setItemCollection(attachedItemCollection);
             em.persist(os);
             if (codigofunc != null) {
                 codigofunc.getOsCollection().add(os);
@@ -69,15 +56,6 @@ public class OsJpaController implements Serializable {
                 codigocliente.getOsCollection().add(os);
                 codigocliente = em.merge(codigocliente);
             }
-            for (Item itemCollectionItem : os.getItemCollection()) {
-                Os oldProtocoloOsOfItemCollectionItem = itemCollectionItem.getProtocoloOs();
-                itemCollectionItem.setProtocoloOs(os);
-                itemCollectionItem = em.merge(itemCollectionItem);
-                if (oldProtocoloOsOfItemCollectionItem != null) {
-                    oldProtocoloOsOfItemCollectionItem.getItemCollection().remove(itemCollectionItem);
-                    oldProtocoloOsOfItemCollectionItem = em.merge(oldProtocoloOsOfItemCollectionItem);
-                }
-            }
             em.getTransaction().commit();
         } finally {
             if (em != null) {
@@ -86,7 +64,7 @@ public class OsJpaController implements Serializable {
         }
     }
 
-    public void edit(Os os) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Os os) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -96,35 +74,14 @@ public class OsJpaController implements Serializable {
             Funcionario codigofuncNew = os.getCodigofunc();
             Cliente codigoclienteOld = persistentOs.getCodigocliente();
             Cliente codigoclienteNew = os.getCodigocliente();
-            Collection<Item> itemCollectionOld = persistentOs.getItemCollection();
-            Collection<Item> itemCollectionNew = os.getItemCollection();
-            List<String> illegalOrphanMessages = null;
-            for (Item itemCollectionOldItem : itemCollectionOld) {
-                if (!itemCollectionNew.contains(itemCollectionOldItem)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Item " + itemCollectionOldItem + " since its protocoloOs field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
             if (codigofuncNew != null) {
-                codigofuncNew = em.getReference(codigofuncNew.getClass(), codigofuncNew.getCodigo());
+                codigofuncNew = em.getReference(codigofuncNew.getClass(), codigofuncNew.getCpf());
                 os.setCodigofunc(codigofuncNew);
             }
             if (codigoclienteNew != null) {
                 codigoclienteNew = em.getReference(codigoclienteNew.getClass(), codigoclienteNew.getCnpj());
                 os.setCodigocliente(codigoclienteNew);
             }
-            Collection<Item> attachedItemCollectionNew = new ArrayList<Item>();
-            for (Item itemCollectionNewItemToAttach : itemCollectionNew) {
-                itemCollectionNewItemToAttach = em.getReference(itemCollectionNewItemToAttach.getClass(), itemCollectionNewItemToAttach.getCodigo());
-                attachedItemCollectionNew.add(itemCollectionNewItemToAttach);
-            }
-            itemCollectionNew = attachedItemCollectionNew;
-            os.setItemCollection(itemCollectionNew);
             os = em.merge(os);
             if (codigofuncOld != null && !codigofuncOld.equals(codigofuncNew)) {
                 codigofuncOld.getOsCollection().remove(os);
@@ -141,17 +98,6 @@ public class OsJpaController implements Serializable {
             if (codigoclienteNew != null && !codigoclienteNew.equals(codigoclienteOld)) {
                 codigoclienteNew.getOsCollection().add(os);
                 codigoclienteNew = em.merge(codigoclienteNew);
-            }
-            for (Item itemCollectionNewItem : itemCollectionNew) {
-                if (!itemCollectionOld.contains(itemCollectionNewItem)) {
-                    Os oldProtocoloOsOfItemCollectionNewItem = itemCollectionNewItem.getProtocoloOs();
-                    itemCollectionNewItem.setProtocoloOs(os);
-                    itemCollectionNewItem = em.merge(itemCollectionNewItem);
-                    if (oldProtocoloOsOfItemCollectionNewItem != null && !oldProtocoloOsOfItemCollectionNewItem.equals(os)) {
-                        oldProtocoloOsOfItemCollectionNewItem.getItemCollection().remove(itemCollectionNewItem);
-                        oldProtocoloOsOfItemCollectionNewItem = em.merge(oldProtocoloOsOfItemCollectionNewItem);
-                    }
-                }
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -170,7 +116,7 @@ public class OsJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -181,17 +127,6 @@ public class OsJpaController implements Serializable {
                 os.getProtocolo();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The os with id " + id + " no longer exists.", enfe);
-            }
-            List<String> illegalOrphanMessages = null;
-            Collection<Item> itemCollectionOrphanCheck = os.getItemCollection();
-            for (Item itemCollectionOrphanCheckItem : itemCollectionOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Os (" + os + ") cannot be destroyed since the Item " + itemCollectionOrphanCheckItem + " in its itemCollection field has a non-nullable protocoloOs field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             Funcionario codigofunc = os.getCodigofunc();
             if (codigofunc != null) {

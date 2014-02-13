@@ -1,13 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dao;
 
 import dao.exceptions.NonexistentEntityException;
-import dao.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,18 +30,13 @@ public class ProdutoServicoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(ProdutoServico produtoServico) throws PreexistingEntityException, Exception {
+    public void create(ProdutoServico produtoServico) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(produtoServico);
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findProdutoServico(produtoServico.getCodigo()) != null) {
-                throw new PreexistingEntityException("ProdutoServico " + produtoServico + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

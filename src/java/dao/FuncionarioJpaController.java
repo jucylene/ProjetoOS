@@ -1,18 +1,18 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
+ * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package dao;
 
 import dao.exceptions.IllegalOrphanException;
 import dao.exceptions.NonexistentEntityException;
+import dao.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import modelo.Endereco;
 import modelo.Os;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,7 @@ public class FuncionarioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Funcionario funcionario) {
+    public void create(Funcionario funcionario) throws PreexistingEntityException, Exception {
         if (funcionario.getOsCollection() == null) {
             funcionario.setOsCollection(new ArrayList<Os>());
         }
@@ -44,6 +44,11 @@ public class FuncionarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Endereco codigoendereco = funcionario.getCodigoendereco();
+            if (codigoendereco != null) {
+                codigoendereco = em.getReference(codigoendereco.getClass(), codigoendereco.getCodigo());
+                funcionario.setCodigoendereco(codigoendereco);
+            }
             Collection<Os> attachedOsCollection = new ArrayList<Os>();
             for (Os osCollectionOsToAttach : funcionario.getOsCollection()) {
                 osCollectionOsToAttach = em.getReference(osCollectionOsToAttach.getClass(), osCollectionOsToAttach.getProtocolo());
@@ -51,6 +56,10 @@ public class FuncionarioJpaController implements Serializable {
             }
             funcionario.setOsCollection(attachedOsCollection);
             em.persist(funcionario);
+            if (codigoendereco != null) {
+                codigoendereco.getFuncionarioCollection().add(funcionario);
+                codigoendereco = em.merge(codigoendereco);
+            }
             for (Os osCollectionOs : funcionario.getOsCollection()) {
                 Funcionario oldCodigofuncOfOsCollectionOs = osCollectionOs.getCodigofunc();
                 osCollectionOs.setCodigofunc(funcionario);
@@ -61,6 +70,11 @@ public class FuncionarioJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
+        } catch (Exception ex) {
+            if (findFuncionario(funcionario.getCpf()) != null) {
+                throw new PreexistingEntityException("Funcionario " + funcionario + " already exists.", ex);
+            }
+            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -73,7 +87,9 @@ public class FuncionarioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Funcionario persistentFuncionario = em.find(Funcionario.class, funcionario.getCodigo());
+            Funcionario persistentFuncionario = em.find(Funcionario.class, funcionario.getCpf());
+            Endereco codigoenderecoOld = persistentFuncionario.getCodigoendereco();
+            Endereco codigoenderecoNew = funcionario.getCodigoendereco();
             Collection<Os> osCollectionOld = persistentFuncionario.getOsCollection();
             Collection<Os> osCollectionNew = funcionario.getOsCollection();
             List<String> illegalOrphanMessages = null;
@@ -88,6 +104,10 @@ public class FuncionarioJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (codigoenderecoNew != null) {
+                codigoenderecoNew = em.getReference(codigoenderecoNew.getClass(), codigoenderecoNew.getCodigo());
+                funcionario.setCodigoendereco(codigoenderecoNew);
+            }
             Collection<Os> attachedOsCollectionNew = new ArrayList<Os>();
             for (Os osCollectionNewOsToAttach : osCollectionNew) {
                 osCollectionNewOsToAttach = em.getReference(osCollectionNewOsToAttach.getClass(), osCollectionNewOsToAttach.getProtocolo());
@@ -96,6 +116,14 @@ public class FuncionarioJpaController implements Serializable {
             osCollectionNew = attachedOsCollectionNew;
             funcionario.setOsCollection(osCollectionNew);
             funcionario = em.merge(funcionario);
+            if (codigoenderecoOld != null && !codigoenderecoOld.equals(codigoenderecoNew)) {
+                codigoenderecoOld.getFuncionarioCollection().remove(funcionario);
+                codigoenderecoOld = em.merge(codigoenderecoOld);
+            }
+            if (codigoenderecoNew != null && !codigoenderecoNew.equals(codigoenderecoOld)) {
+                codigoenderecoNew.getFuncionarioCollection().add(funcionario);
+                codigoenderecoNew = em.merge(codigoenderecoNew);
+            }
             for (Os osCollectionNewOs : osCollectionNew) {
                 if (!osCollectionOld.contains(osCollectionNewOs)) {
                     Funcionario oldCodigofuncOfOsCollectionNewOs = osCollectionNewOs.getCodigofunc();
@@ -111,7 +139,7 @@ public class FuncionarioJpaController implements Serializable {
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = funcionario.getCodigo();
+                String id = funcionario.getCpf();
                 if (findFuncionario(id) == null) {
                     throw new NonexistentEntityException("The funcionario with id " + id + " no longer exists.");
                 }
@@ -124,7 +152,7 @@ public class FuncionarioJpaController implements Serializable {
         }
     }
 
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(String id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -132,7 +160,7 @@ public class FuncionarioJpaController implements Serializable {
             Funcionario funcionario;
             try {
                 funcionario = em.getReference(Funcionario.class, id);
-                funcionario.getCodigo();
+                funcionario.getCpf();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The funcionario with id " + id + " no longer exists.", enfe);
             }
@@ -146,6 +174,11 @@ public class FuncionarioJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Endereco codigoendereco = funcionario.getCodigoendereco();
+            if (codigoendereco != null) {
+                codigoendereco.getFuncionarioCollection().remove(funcionario);
+                codigoendereco = em.merge(codigoendereco);
             }
             em.remove(funcionario);
             em.getTransaction().commit();
@@ -180,7 +213,7 @@ public class FuncionarioJpaController implements Serializable {
         }
     }
 
-    public Funcionario findFuncionario(Integer id) {
+    public Funcionario findFuncionario(String id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Funcionario.class, id);

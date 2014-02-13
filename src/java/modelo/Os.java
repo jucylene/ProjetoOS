@@ -5,10 +5,8 @@
 package modelo;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,12 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -65,14 +61,12 @@ public class Os implements Serializable {
     private String descricao;
     @Column(name = "observacao")
     private String observacao;
-    @JoinColumn(name = "codigofunc", referencedColumnName = "codigo")
+    @JoinColumn(name = "codigofunc", referencedColumnName = "cpf")
     @ManyToOne(optional = false)
     private Funcionario codigofunc;
     @JoinColumn(name = "codigocliente", referencedColumnName = "cnpj")
     @ManyToOne(optional = false)
     private Cliente codigocliente;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "protocoloOs")
-    private Collection<Item> itemCollection;
 
     public Os() {
     }
@@ -158,15 +152,6 @@ public class Os implements Serializable {
 
     public void setCodigocliente(Cliente codigocliente) {
         this.codigocliente = codigocliente;
-    }
-
-    @XmlTransient
-    public Collection<Item> getItemCollection() {
-        return itemCollection;
-    }
-
-    public void setItemCollection(Collection<Item> itemCollection) {
-        this.itemCollection = itemCollection;
     }
 
     @Override

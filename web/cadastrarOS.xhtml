@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Cadastro de Ordem de Serviço</title>
+    </h:head>
+    <h:body>
+
+        <center for="nome" style="color:cornflowerblue">
+            <h1>
+                INTECH
+            </h1>
+        </center>
+
+        <h:form>
+            <p:menubar>
+                <p:menuitem value="Início" url="#" icon="ui-icon-home"/>  
+
+                <p:submenu label="Cliente">  
+                    <p:menuitem value="Cadastrar" url="#" /> 
+                    <p:menuitem value="Alterar" url="#" />  
+                    <p:menuitem value="Remover" url="#" />
+
+                </p:submenu>  
+
+                <p:menuitem value="Sair" icon="ui-icon-close" action="#"/> 
+
+            </p:menubar>
+
+        </h:form>
+
+        <br/>
+
+        <p:layoutUnit position="center" size="100" resizable="true" closable="true" collapsible="true">
+
+
+
+
+            <!--Formulario de crud-->
+
+            <p:panel header="Manutenção de ordens de serviço">
+                <h:form id="formulario" prependId="false">
+                    <h:panelGrid>
+
+
+                        <h:inputHidden value="#{osMB.os.protocolo}"/>
+
+                        <h:outputText value="Cliente: "/>
+                        <h:selectOneMenu id = "campoCliente" value="#{osMB.cnpj}">
+                            <f:selectItems value="#{osMB.clientes}" var="cliente" itemLabel="#{cliente.nome}" itemValue="#{cliente.cnpj}"/>
+                        </h:selectOneMenu>
+                        <p:message for="campoCliente"/>
+
+                        <h:outputText value="Funcionário: "/>
+                        <h:selectOneMenu id = "campoFuncionario" value="#{osMB.cpf}">
+                            <f:selectItems value="#{osMB.funcionarios}" var="f" itemLabel="#{f.nome}" itemValue="#{f.cpf}"/>
+                        </h:selectOneMenu>
+                        <p:message for="campoFuncionario"/>
+
+                        <h:outputText value="Descricao:"/>
+                        <p:inputTextarea id="campoDescricao" value="#{osMB.os.descricao}" 
+                                         required="true" requiredMessage="Campo obrigatório"/>
+                        <p:message for="campoDescricao"/>
+
+
+
+                        <h:outputText value="Data de criação: "/>
+                        <p:calendar id="campoDataDeCriacao" value="#{osMB.os.datacriacao}" required="true" 
+                                    requiredMessage="Campo Obrigatório!" navigator="true" maxdate="today"
+                                    yearRange="c-120:c"/>
+                        <p:message for="campoDataDeCriacao"/> 
+
+                        <h:outputText value="Data de termino"/>
+                        <p:calendar id="campoDataDeTermino" value="#{osMB.os.datatermino}" required="true" 
+                                    requiredMessage="Campo Obrigatório!" navigator="true" maxdate="today"
+                                    yearRange="c-120:c"/>
+                        <p:message for="campoDataDeTermino"/> 
+
+                        <h:outputText value="Situação: "/>
+                        <p:selectOneMenu id="campoSituacao" value="#{osMB.os.situacao}" required="true" requiredMessage="Campo Obrigatório">
+                            <f:selectItem itemLabel="Selecione a situação!" itemValue=""/>
+                            <f:selectItem itemLabel="Cadastrada" itemValue="Cadastrada"/>
+                            <f:selectItem itemLabel="Aceita" itemValue="Aceita"/>
+                            <f:selectItem itemLabel="Em andamento" itemValue="Em andamento"/>
+                            <f:selectItem itemLabel="Terminada" itemValue="Terminada"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Prioridade: "/>
+                        <p:selectOneMenu id="campoPrioridade" value="#{osMB.os.prioridade}" required="true" requiredMessage="Campo Obrigatório">
+                            <f:selectItem itemLabel="Selecione a Prioridade!" itemValue=""/>
+                            <f:selectItem itemLabel="Urgente" itemValue="Urgente"/>
+                            <f:selectItem itemLabel="Alta" itemValue="Alta"/>
+                            <f:selectItem itemLabel="Normal" itemValue="Normal"/>
+                            <f:selectItem itemLabel="Baixa" itemValue="Baixa"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText value="Observação: "/>
+                        <p:inputTextarea  id="campoObservacao" value="#{osMB.os.observacao}" required="true" requiredMessage="Campo Obrigatório"/> 
+
+
+
+                    </h:panelGrid>
+
+                    <p:commandButton value="Cadastrar" action="#{osMB.cadastraOs()}" image="ui-icon-disk" ajax="false"/>
+                    <p:commandButton value="Alterar" action="#{osMB.alterarOs()}" image="ui-icon-pencil" ajax="false"/>
+                </h:form>
+
+            </p:panel>
+
+
+
+        </p:layoutUnit>
+
+    </h:body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Cadastro Produto e Serviço</title>
+    </h:head>
+    <h:body>
+
+        <center for="nome" style="color:cornflowerblue">
+            <h1>
+                INTECH
+            </h1>
+        </center>
+
+        <h:form>
+            <p:menubar>
+                <p:menuitem value="Início" url="#" icon="ui-icon-home"/>  
+
+                <p:submenu label="Cliente">  
+                    <p:menuitem value="Cadastrar" url="#" /> 
+                    <p:menuitem value="Alterar" url="#" />  
+                    <p:menuitem value="Remover" url="#" />
+
+                </p:submenu>  
+
+               <p:menuitem value="Sair" icon="ui-icon-close" action="#"/> 
+
+           </p:menubar>
+
+        </h:form>
+
+        <br/>
+
+        <p:layoutUnit position="center" size="100" resizable="true" closable="true" collapsible="true">
+
+   
+            
+             <!--Formulario de crud-->
+
+        <p:panel header="Manutenção de Produtos e Serviços">
+            <h:form id="formulario" prependId="false">
+                <h:panelGrid columns="3">
+                    
+                    <h:inputHidden  value="#{produtoServicoMB.produtoServico.codigo}"/>
+                    
+                    <h:outputText value="Tipo: " /> 
+                     
+                    <p:selectOneMenu id="campoCodigo" value="#{produtoServicoMB.produtoServico.tipo}" 
+                                     required="true" requiredMessage="Campo Obrigatório">  
+                         <f:selectItem itemLabel="Selecione o Tipo" itemValue="" />
+                         <f:selectItem itemLabel="Produto" itemValue="Produto"/> 
+                         <f:selectItem itemLabel="Serviço" itemValue="Serviço"/> 
+                         
+                    </p:selectOneMenu>
+                    <p:message for="campoCodigo"/>
+                    
+                    <h:outputText value="Nome:"/>
+                    <p:inputText id="campoNome" value="#{produtoServicoMB.produtoServico.nome}" 
+                                 required="true" requiredMessage="Campo obrigatório" validatorMessage="O nome não pode conter números">
+                                 
+                    </p:inputText>
+                    <p:message for="campoNome"/>
+                    
+                    <h:outputText value="Preço:"/>
+                    <p:inputText id="campoPreco" value="#{produtoServicoMB.produtoServico.preco}" 
+                                 required="true" requiredMessage="Campo obrigatório" 
+                                 validatorMessage="O preço não deve conter letras">
+                                 
+                                 
+                    </p:inputText>
+                    <p:message for="campoPreco"/>
+                    
+                    <h:outputText value="Quantidade:"/>
+                    <p:inputText id="campoQuantidade" value="#{produtoServicoMB.produtoServico.quantidade}" 
+                                 required="true" requiredMessage="Campo obrigatório" 
+                                 validatorMessage="A quantidade não deve conter letras">
+                                 
+                    </p:inputText>
+                    <p:message for="campoQuantidade"/>
+                    
+                </h:panelGrid>
+                
+                <p:commandButton value="Cadastrar" action="#{produtoServicoMB.cadastraProdutoServico()}" image="ui-icon-disk" ajax="false"/>
+                <p:commandButton value="Alterar" action="#{produtoServicoMB.alterarProdutoServico()}" image="ui-icon-pencil" ajax="false"/>
+            </h:form>
+            
+        </p:panel>
+            
+           
+
+        </p:layoutUnit>
+
+    </h:body>
+</html>
+
