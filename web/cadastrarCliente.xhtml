@@ -33,15 +33,72 @@
         </h:form>
 
         <br/>
+        
+        
+        
+        
 
-        <p:layoutUnit position="center" size="100" resizable="true" closable="true" collapsible="true">
+        
+        <p:dataTable value="#{clienteMB.clientes}" emptyMessage="Nenhum Cliente foi cadastrado"
+                     paginatorTemplate="{CurrentPageReport}   {FirstPageLink} {PreviousPageLink}
+                     {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     paginator="true" rows="3" rowsPerPageTemplate="3,10,15,20,25"
+                     var="cliente" id="tabClientes">
+            <f:facet name="header">  
+                <h:outputText value="Clientes" /> 
+            </f:facet>
 
-            <center>
-                <br/>
-                <h:outputText style="color:red" value="#{alunoMB.mensagem}"/>
-            </center>
+            <p:column>
+                <f:facet name="header">  
+                    <h:outputText value="Nome"/> 
+                </f:facet>
+                <h:form>
+                    <p:commandLink ajax="false" value="#{cliente.nome}"
+                                   action="#{clienteMB.carregar(cliente)}"/>
+                                       
+                </h:form>
+            </p:column>
+            
+
+           <p:column>
+                <f:facet name="header">  
+                    <h:outputText value="CNPJ"/> 
+                </f:facet>
+                <h:form>
+                    <p:commandLink ajax="false" value="#{cliente.cnpj}"
+                                   action="#{clienteMB.carregar(cliente)}"/>
+                </h:form>
+            </p:column>
+            
+           
             
             
+            
+
+
+            <p:column>
+                <f:facet name="header">  
+                    <h:outputText value="Excluir"/> 
+                </f:facet>
+                <h:form>
+                    <p:commandButton ajax="false" image="ui-icon-trash" 
+                                     action="#{clienteMB.excluirCliente(cliente)}"/>
+                </h:form>
+            </p:column>
+            
+        </p:dataTable>
+        <hr></hr>
+        
+        
+        
+        
+        
+        
+        
+        <p:growl for="formulario"/>
+            
+         <br/>
+          <br/>
              <!--Formulario de crud-->
 
         <p:panel header="Manutenção de Clientes">
@@ -53,7 +110,7 @@
                                  <f:validateRegex pattern="^[A-Za-z]+"/>
                                  
                     </p:inputText>
-                    <p:message for="campoNome"/>
+                    <p:growl for="campoNome" />
                    
                     <h:outputText value="CNPJ:"/>
                     <p:inputMask id="campoCnpj" mask="99.999.999/9999-99" value="#{clienteMB.cliente.cnpj}" 
@@ -93,9 +150,7 @@
                          <f:selectItems value="#{clienteMB.estados}" var="est" itemLabel="#{est.nome}" itemValue="#{est.sigla}"/> 
                          
                          
-                         <p:ajax update="campoCidade"   
-                                 listener="#{clienteMB.cidades}" /> 
-                         
+                                                 
                     </p:selectOneMenu>
                     <p:message for="campoEstado"/>
                      
@@ -140,12 +195,9 @@
                 <p:commandButton value="Alterar" action="#{clienteMB.alterarCliente()}" image="ui-icon-pencil" ajax="false"/>
             </h:form>
             
+            
         </p:panel>
             
-           
-
-        </p:layoutUnit>
-
     </h:body>
 </html>
 

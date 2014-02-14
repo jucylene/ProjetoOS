@@ -6,6 +6,7 @@
 package beans;
 
 import dao.CidadeJpaController;
+import dao.EnderecoJpaController;
 import dao.EstadoJpaController;
 import dao.FuncionarioJpaController;
 import dao.exceptions.IllegalOrphanException;
@@ -36,24 +37,25 @@ public class FuncionarioMB {
     private FuncionarioJpaController funcionarioDao = new FuncionarioJpaController(EMF.getEntityManagerFactory());
     private EstadoJpaController estadoDao = new EstadoJpaController(EMF.getEntityManagerFactory());
     private CidadeJpaController cidadeDao = new CidadeJpaController(EMF.getEntityManagerFactory());
+    private EnderecoJpaController enderecoDao = new EnderecoJpaController(EMF.getEntityManagerFactory());
     private Estado estado = new Estado();
     private Cidade cidade = new Cidade();
     private Endereco endereco = new Endereco();
     private List<Estado> estados = new ArrayList<Estado>();
     private List<Cidade> cidades = new ArrayList<Cidade>();
-    private List<Cidade> cidadePorEstado = new ArrayList<Cidade>();
-    private String estSig;
-    
-    private Integer codCidade;
-    
-    private Estado gravarEstado;
-    private Cidade gravarCidade;
     private List<Cliente> clientes;
 
     public FuncionarioMB() {
+        endereco = new Endereco();
+        estado = new Estado();
+        cidade = new Cidade();
     }
 
     public void cadastraFuncionario() throws PreexistingEntityException, Exception {
+        endereco.setCodigocidade(cidade);
+        endereco.setSiglaestado(estado);
+        enderecoDao.create(endereco);
+        funcionario.setCodigoendereco(endereco);
         funcionarioDao.create(funcionario);
     }
 
@@ -82,34 +84,7 @@ public class FuncionarioMB {
         }
     }
     
-    public void retornaEstado()
-    {
-        for(Estado est : estadoDao.findEstadoEntities())
-        {
-            if(est.getSigla().equals(estSig))
-            {
-                gravarEstado = est;
-                endereco.setSiglaestado(gravarEstado);
-            }
-            
-        }
-        //pesquisaCidadesPorSiglaEstado("RN");
-       
-    }
-    
-    public void retornaCidade()
-    {
-        for(Cidade cd : cidadeDao.findCidadeEntities())
-        {
-            if(cd.getCodigo().equals(codCidade))
-            {
-                gravarCidade = cd;
-                endereco.setCodigocidade(gravarCidade);
-            }
-            
-        }
-       
-    }
+   
 
     public Funcionario getFuncionario() {
         return funcionario;
@@ -161,47 +136,7 @@ public class FuncionarioMB {
         this.cidades = cidades;
     }
 
-    public List<Cidade> getCidadePorEstado() {
-        return cidadePorEstado;
-    }
-
-    public void setCidadePorEstado(List<Cidade> cidadePorEstado) {
-        this.cidadePorEstado = cidadePorEstado;
-    }
-
-    public String getEstSig() {
-        return estSig;
-    }
-
-    public void setEstSig(String estSig) {
-        this.estSig = estSig;
-        retornaEstado();
-    }
-
-    public Integer getCodCidade() {
-        return codCidade;
-    }
-
-    public void setCodCidade(Integer codCidade) {
-        this.codCidade = codCidade;
-        retornaCidade();
-    }
-
-    public Estado getGravarEstado() {
-        return gravarEstado;
-    }
-
-    public void setGravarEstado(Estado gravarEstado) {
-        this.gravarEstado = gravarEstado;
-    }
-
-    public Cidade getGravarCidade() {
-        return gravarCidade;
-    }
-
-    public void setGravarCidade(Cidade gravarCidade) {
-        this.gravarCidade = gravarCidade;
-    }
+   
 
     public List<Cliente> getClientes() {
         return clientes;

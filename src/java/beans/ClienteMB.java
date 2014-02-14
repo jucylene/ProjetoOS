@@ -25,6 +25,7 @@ import modelo.Cliente;
 import modelo.Endereco;
 import modelo.Estado;
 import util.EMF;
+import util.FacesUtil;
 
 /**
  *
@@ -34,7 +35,7 @@ import util.EMF;
 @RequestScoped
 public class ClienteMB {
 
-    private Cliente cliente = new Cliente();
+    
     private ClienteJpaController clienteDao = new ClienteJpaController(EMF.getEntityManagerFactory());
     private EstadoJpaController estadoDao = new EstadoJpaController(EMF.getEntityManagerFactory());
     private CidadeJpaController cidadeDao = new CidadeJpaController(EMF.getEntityManagerFactory());
@@ -44,18 +45,84 @@ public class ClienteMB {
     private Endereco endereco = new Endereco();
     private List<Estado> estados = new ArrayList<Estado>();
     private List<Cidade> cidades = new ArrayList<Cidade>();
-      
+    private Cliente cliente = new Cliente();  
     private List<Cliente> clientes;
     
+   public void carregar(Cliente cli) {
+        setEstado(estado);
+        setCliente(cli);
+    }
+   
+   public void limpar(){
+        setCliente(new Cliente());
+    }
    
     
     
     public ClienteMB() {
+        
+        cliente = new Cliente();
+        pesquisarCliente(); 
         endereco = new Endereco();
+        
         estado = new Estado();
         cidade = new Cidade();
     }
     
+   
+    
+    public void cadastraCliente() throws PreexistingEntityException, Exception {
+        endereco.setCodigocidade(cidade);
+        endereco.setSiglaestado(estado);
+        enderecoDao.create(endereco);
+        cliente.setCodigoendereco(endereco);
+        clienteDao.create(cliente);
+        cliente = new Cliente();
+        FacesUtil.adicionarMensagem("formulario", "O Cliente foi cadastrado");
+    }
+    
+
+    public void alterarCliente() {
+        try {
+            clienteDao.edit(getCliente());
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void pesquisarCliente() {
+        clienteDao.findClienteEntities();
+    }
+
+    public void excluirCliente(Cliente cliente) {
+        try {
+            clienteDao.destroy(cliente.getCnpj());
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * @return the cliente
+     */
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    /**
+     * @param cliente the cliente to set
+     */
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+   
+   
+   
     public Endereco getEndereco() {
         return endereco;
     }
@@ -85,7 +152,7 @@ public class ClienteMB {
 
     
     public List<Cliente> getClientes() {
-        return clientes;
+        return clientes = clienteDao.findClienteEntities();
     }
 
     public void setClientes(List<Cliente> clientes) {
@@ -118,7 +185,12 @@ public class ClienteMB {
 
       
     public List<Estado> getEstados() {
-        estados = estadoDao.findEstadoEntities();
+        if(estado.getSigla() != null) {
+            estados = new ArrayList<Estado>();
+            estados.add(estado);
+        } else {
+            estados = estadoDao.findEstadoEntities();
+        }
         return estados;
     }
     
@@ -135,59 +207,6 @@ public class ClienteMB {
 
     public void setCidades(List<Cidade> cidades) {
         this.cidades = cidades;
-    }
-    
-    public void cadastraCliente() throws PreexistingEntityException, Exception {
-        endereco.setCodigocidade(cidade);
-        endereco.setSiglaestado(estado);
-        enderecoDao.create(endereco);
-        cliente.setCodigoendereco(endereco);
-        clienteDao.create(cliente);
-    }
-    
-
-    public void alterarCliente() {
-        try {
-            clienteDao.edit(getCliente());
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void pesquisarCliente() {
-        clienteDao.findClienteEntities();
-    }
-
-    public void excluirCliente(String cnpj) {
-        try {
-            clienteDao.destroy(cnpj);
-        } catch (IllegalOrphanException ex) {
-            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NonexistentEntityException ex) {
-            Logger.getLogger(ClienteMB.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * @return the cliente
-     */
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    /**
-     * @param cliente the cliente to set
-     */
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
-   
-   
-   public void carregarEstado(Estado es) {
-        setEstado(es);
     }
    
   
